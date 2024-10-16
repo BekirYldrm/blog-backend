@@ -1,0 +1,191 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- User Table -->
+    <changeSet id="1" author="bekir">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Author Table -->
+    <changeSet id="2" author="bekir">
+        <createTable tableName="author">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Blog Table -->
+    <changeSet id="3" author="bekir">
+        <createTable tableName="blog">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="VARCHAR(5000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="popularity" type="INT"/>
+            <column name="date" type="date"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Comment Table -->
+    <changeSet id="4" author="bekir">
+        <createTable tableName="comment">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blog_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="5" author="bekir">
+        <createTable tableName="save">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blog_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="6" author="bekir">
+        <createTable tableName="favorite">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blog_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+    </changeSet>
+
+    <changeSet id="11-10-2024-add-auto-increment" author="bekir">
+        <addAutoIncrement tableName="user" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="blog" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="comment" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="author" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="favorite" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="save" columnName="id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="11-10-2024-add-foregin-key" author="bekir">
+        <!-- Foreign key to User -->
+        <addForeignKeyConstraint baseTableName="favorite"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_fav_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <!-- Foreign key to User -->
+        <addForeignKeyConstraint baseTableName="save"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_save_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <!-- Foreign key to User -->
+        <addForeignKeyConstraint baseTableName="comment"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_comment_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Foreign key to Blog -->
+        <addForeignKeyConstraint baseTableName="favorite"
+                                 baseColumnNames="blog_id"
+                                 constraintName="fk_fav_blog"
+                                 referencedTableName="blog"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <!-- Foreign key to Blog -->
+        <addForeignKeyConstraint baseTableName="save"
+                                 baseColumnNames="blog_id"
+                                 constraintName="fk_save_blog"
+                                 referencedTableName="blog"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <!-- Foreign key to Blog -->
+        <addForeignKeyConstraint baseTableName="comment"
+                                 baseColumnNames="blog_id"
+                                 constraintName="fk_comment_blog"
+                                 referencedTableName="blog"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <!-- Foreign key to Author -->
+        <addForeignKeyConstraint baseTableName="blog"
+                                 baseColumnNames="author_id"
+                                 constraintName="fk_blog_author"
+                                 referencedTableName="author"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="14-10-2024-add-constraint" author="bekir">
+        <addUniqueConstraint tableName="author" columnNames="email" constraintName="uk_author_email"/>
+        <addUniqueConstraint tableName="user" columnNames="username" constraintName="uk_user_username"/>
+    </changeSet>
+
+    <changeSet id="14-10-2024-add-email-column" author="bekir">
+        <addColumn tableName="user">
+            <column type="VARCHAR(255)" name="email">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addUniqueConstraint tableName="user" columnNames="email" constraintName="uk_user_email" />
+    </changeSet>
+
+</databaseChangeLog>
