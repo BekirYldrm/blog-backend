@@ -22,8 +22,13 @@ public class GlobalExceptionHandler {
                     PasswordMatchException.class,
                     EmailMatchException.class,
                     EmailAlreadyInUseException.class,
+                    EmailValidationException.class,
                     UsernameMatchException.class,
                     UsernameAlreadyInUseException.class,
+                    UsernameValidationException.class,
+                    NameValidationException.class,
+                    BlogValidationException.class,
+                    CommentValidationException.class,
             }
     )
     public ResponseEntity<ErrorResponse> handleException(RuntimeException e) {
@@ -32,11 +37,9 @@ public class GlobalExceptionHandler {
 
         if (e instanceof EntityNotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        }
-        else if (e instanceof EmailAlreadyInUseException  || e instanceof  UsernameAlreadyInUseException) {
+        } else if (e instanceof EmailAlreadyInUseException || e instanceof UsernameAlreadyInUseException) {
             status = HttpStatus.CONFLICT;
-        }
-        else {
+        } else {
             status = HttpStatus.BAD_REQUEST;
         }
 

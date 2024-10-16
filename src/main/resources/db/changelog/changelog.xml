@@ -188,4 +188,8 @@
         <addUniqueConstraint tableName="user" columnNames="email" constraintName="uk_user_email" />
     </changeSet>
 
+    <changeSet id="16-10-2024-change-rating-column-type" author="bekir">
+        <modifyDataType tableName="comment" columnName="rating" newDataType="double" />
+    </changeSet>
+
 </databaseChangeLog>

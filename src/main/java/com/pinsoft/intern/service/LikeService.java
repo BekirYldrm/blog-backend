@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -32,17 +33,43 @@ public class LikeService {
         return like;
     }
 
+    public List<User> findUsers(int blogId) {
+        Blog blog = blogService.find(blogId);
+        return likeRepository.findUsers(blog);
+    }
+
+    public List<Blog> findBlogs(int userId) {
+        User user = userService.find(userId);
+        return likeRepository.findBlogs(user);
+    }
+
     public Like save(LikedDTO likedDTO) {
-        User user = userService.find(likedDTO.getUserId());
-        Blog blog = blogService.find(likedDTO.getBlogId());
-        Like like = new Like();
-        like.setUser(user);
-        like.setBlog(blog);
-        return likeRepository.save(like);
+
+        int userId = likedDTO.getUserId();
+        int blogId = likedDTO.getBlogId();
+        User user = userService.find(userId);
+        Blog blog = blogService.find(blogId);
+
+        Optional<Like> likeOptional = likeRepository.findByUserAndBlog(userId, blogId);
+
+        if (likeOptional.isPresent()) {
+            delete(likeOptional.get().getId().intValue());
+            blogService.decreasePopularity(blog);
+            return null;
+        } else {
+            Like like = new Like();
+            like.setUser(user);
+            blogService.increasePopularity(blog);
+            like.setBlog(blog);
+            return likeRepository.save(like);
+        }
+
     }
 
     public void delete(int id) {
         Like like = find(id);
         likeRepository.delete(like);
     }
+
+
 }

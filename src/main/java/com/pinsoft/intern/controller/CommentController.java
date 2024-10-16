@@ -18,6 +18,7 @@ import java.util.List;
 
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class CommentController {
+
     private final CommentService commentService;
 
     @GetMapping
@@ -28,8 +29,20 @@ public class CommentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Comment> getComment(@PathVariable int id) {
-       Comment comment = commentService.find(id);
-       return ResponseEntity.ok(comment);
+        Comment comment = commentService.find(id);
+        return ResponseEntity.ok(comment);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Comment>> getCommentsByUser(@PathVariable int id) {
+        List<Comment> comments = commentService.findByUser(id);
+        return ResponseEntity.ok(comments);
+    }
+
+    @GetMapping("/blog/{id}")
+    public ResponseEntity<List<Comment>> getCommentsByBlog(@PathVariable int id) {
+        List<Comment> comments = commentService.findByBlog(id);
+        return ResponseEntity.ok(comments);
     }
 
     @PostMapping
@@ -40,7 +53,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable int id) {
-       commentService.delete(id);
-       return ResponseEntity.noContent().build();
+        commentService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

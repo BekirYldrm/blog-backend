@@ -1,20 +1,20 @@
 package com.pinsoft.intern.validation;
 
-import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.exception.PasswordMatchException;
 import com.pinsoft.intern.exception.PasswordValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
-@Service
+@Component
 @Data
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class PasswordValidation {
     private static final int MIN_LENGTH = 8;
+    private static final int MAX_LENGTH = 16;
     private static final Pattern UPPER_CASE_PATTERN = Pattern.compile("[A-Z]");
     private static final Pattern LOWER_CASE_PATTERN = Pattern.compile("[a-z]");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]");
@@ -33,8 +33,14 @@ public class PasswordValidation {
     }
 
     private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new PasswordValidationException("Password cannot be empty.");
+        }
         if (password.length() < MIN_LENGTH) {
             throw new PasswordValidationException("Password length must be at least " + MIN_LENGTH + " characters");
+        }
+        if (password.length() > MAX_LENGTH) {
+            throw new PasswordValidationException("Password length must not exceed " + MAX_LENGTH + " characters");
         }
         if (!UPPER_CASE_PATTERN.matcher(password).find()) {
             throw new PasswordValidationException("Password must contain at least one uppercase letter");

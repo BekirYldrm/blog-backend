@@ -4,6 +4,7 @@ import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.entity.Author;
 import com.pinsoft.intern.repository.AuthorRepository;
 import com.pinsoft.intern.validation.EmailValidation;
+import com.pinsoft.intern.validation.NameValidation;
 import com.pinsoft.intern.validation.PasswordValidation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final EmailValidation emailValidation;
     private final PasswordValidation passwordValidation;
+    private final NameValidation nameValidation;
 
     public List<Author> findAll() {
         return authorRepository.findAll();
@@ -38,6 +40,8 @@ public class AuthorService {
         String firstName = authorDTO.getFirstName();
         String lastName = authorDTO.getLastName();
 
+        nameValidation.validation(firstName);
+        nameValidation.validation(lastName);
         emailValidation.validation(email);
         passwordValidation.validation(password);
 

@@ -5,6 +5,7 @@ import com.pinsoft.intern.entity.Blog;
 import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.repository.CommentRepository;
+import com.pinsoft.intern.validation.CommentValidation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BlogService blogService;
+    private final CommentValidation commentValidation;
 
     public List<Comment> findAll() {
         return commentRepository.findAll();
@@ -32,14 +34,34 @@ public class CommentService {
         return comment;
     }
 
+    public List<Comment> findByUser(int id) {
+        List<Comment> comments = commentRepository.findByUser(id);
+        return comments;
+    }
+
+    public List<Comment> findByBlog(int id) {
+        List<Comment> comments = commentRepository.findByBlog(id);
+        return comments;
+    }
+
+
     public Comment save(CommentDTO commentDTO) {
-        User user = userService.find(commentDTO.getUserId());
-        Blog blog = blogService.find(commentDTO.getBlogId());
+
+        int userId = commentDTO.getUserId();
+        int blogId = commentDTO.getBlogId();
+        String commentStr = commentDTO.getComment();
+        Double rating = commentDTO.getRating();
+
+        User user = userService.find(userId);
+        Blog blog = blogService.find(blogId);
+
+        commentValidation.validation(commentStr, rating);
+
         Comment comment = new Comment();
         comment.setUser(user);
         comment.setBlog(blog);
-        comment.setComment(commentDTO.getComment());
-        comment.setRating(commentDTO.getRating());
+        comment.setComment(commentStr);
+        comment.setRating(rating);
         return commentRepository.save(comment);
     }
 

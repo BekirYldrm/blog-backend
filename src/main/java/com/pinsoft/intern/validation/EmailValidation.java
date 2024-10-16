@@ -2,15 +2,16 @@ package com.pinsoft.intern.validation;
 
 import com.pinsoft.intern.exception.EmailAlreadyInUseException;
 import com.pinsoft.intern.exception.EmailMatchException;
+import com.pinsoft.intern.exception.EmailValidationException;
 import com.pinsoft.intern.repository.AuthorRepository;
 import com.pinsoft.intern.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @Data
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class EmailValidation {
@@ -32,6 +33,9 @@ public class EmailValidation {
 
     private boolean isFormatEmail(String email) {
         EmailValidator validator = EmailValidator.getInstance();
+        if (email == null || email.isEmpty()) {
+            throw new EmailValidationException("Email cannot be empty.");
+        }
         if (!validator.isValid(email)) {
             throw new IllegalArgumentException("Invalid email format");
         }

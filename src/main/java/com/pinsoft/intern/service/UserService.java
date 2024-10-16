@@ -39,8 +39,8 @@ public class UserService {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
 
-        emailValidation.validation(email);
         usernameValidation.validation(username);
+        emailValidation.validation(email);
         passwordValidation.validation(password);
 
         User user = new User();

@@ -16,7 +16,7 @@ public class Comment {
     private int id;
 
     private String comment;
-    private String rating;
+    private Double rating;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

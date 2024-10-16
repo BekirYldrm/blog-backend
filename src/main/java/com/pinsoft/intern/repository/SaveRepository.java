@@ -1,7 +1,11 @@
 package com.pinsoft.intern.repository;
 
+import com.pinsoft.intern.entity.Blog;
 import com.pinsoft.intern.entity.Save;
+import com.pinsoft.intern.entity.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +27,8 @@ public class SaveRepository implements EntityDao<Save> {
     @Override
     @Transactional
     public Save save(Save entity) {
-         entityManager.persist(entity);
-         return entity;
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override
@@ -41,12 +45,31 @@ public class SaveRepository implements EntityDao<Save> {
     @Override
     @Transactional
     public Save update(Save entity) {
-       return  entityManager.merge(entity);
+        return entityManager.merge(entity);
     }
 
     @Override
     @Transactional
     public void delete(Save entity) {
         entityManager.remove(entity);
+    }
+
+    public Optional<Save> findByUserAndBlog(int userId, int blogId) {
+
+        try {
+            TypedQuery<Save> query = entityManager.createQuery("from Save where user.id= :userId and blog.id = :blogId", Save.class);
+            query.setParameter("userId", userId);
+            query.setParameter("blogId", blogId);
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<Blog> findBlogs(User user) {
+        int userId = user.getId();
+        TypedQuery<Blog> query = entityManager.createQuery("select l.blog from Save l where l.user.id= :userId", Blog.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 }
