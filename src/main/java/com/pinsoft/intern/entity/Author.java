@@ -1,5 +1,6 @@
 package com.pinsoft.intern.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,5 +31,10 @@ public class Author{
     @OneToMany(mappedBy = "author")
     @JsonManagedReference
     private List<Blog> myBlogs;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    @JsonBackReference
+    private Role role;
 
 }

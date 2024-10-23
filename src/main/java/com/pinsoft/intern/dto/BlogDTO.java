@@ -12,4 +12,5 @@ public class BlogDTO {
     private String content;
     private String image;
     private int authorId;
+    private int categoryId;
 }

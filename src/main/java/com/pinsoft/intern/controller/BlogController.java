@@ -21,8 +21,8 @@ public class BlogController {
     private final BlogService blogService;
 
     @GetMapping
-    public ResponseEntity<List<Blog>> getAll() {
-        List<Blog> blogs = blogService.findAll();
+    public ResponseEntity<List<Blog>> getAll(@RequestParam(required = false) String sort) {
+        List<Blog> blogs = blogService.findAll(sort);
         return ResponseEntity.ok(blogs);
     }
 
@@ -46,7 +46,7 @@ public class BlogController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable int id) {
-      blogService.delete(id);
-      return ResponseEntity.noContent().build();
+        blogService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

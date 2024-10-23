@@ -182,14 +182,112 @@
     <changeSet id="14-10-2024-add-email-column" author="bekir">
         <addColumn tableName="user">
             <column type="VARCHAR(255)" name="email">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </addColumn>
-        <addUniqueConstraint tableName="user" columnNames="email" constraintName="uk_user_email" />
+        <addUniqueConstraint tableName="user" columnNames="email" constraintName="uk_user_email"/>
     </changeSet>
 
     <changeSet id="16-10-2024-change-rating-column-type" author="bekir">
-        <modifyDataType tableName="comment" columnName="rating" newDataType="double" />
+        <modifyDataType tableName="comment" columnName="rating" newDataType="double"/>
+    </changeSet>
+
+    <changeSet id="22-10-2024-create-category-table" author="bekir">
+        <createTable tableName="category">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(25)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-column-for-blog-table" author="bekir">
+        <addColumn tableName="blog">
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-foreign-key-constraint" author="bekir">
+        <!-- Foreign key to Category -->
+        <addForeignKeyConstraint baseTableName="blog"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_blog_category"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="22-10-2024-drop-foreign-key-constraint" author="bekir">
+        <dropForeignKeyConstraint baseTableName="blog" constraintName="fk_blog_category"/>
+    </changeSet>
+
+
+    <changeSet id="22-10-2024-add-auto-increment-for-category" author="bekir">
+        <addAutoIncrement tableName="category" columnName="id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-foreign-key-constraint-again" author="bekir">
+        <!-- Foreign key to Category -->
+        <addForeignKeyConstraint baseTableName="blog"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_blog_category"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="22-10-2024-create-table-role" author="bekir">
+        <createTable tableName="role">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-column-for-user-and-author" author="bekir">
+        <addColumn tableName="user">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="author">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-auto-increment-for-role" author="bekir">
+        <addAutoIncrement tableName="role" columnName="id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="22-10-2024-add-foreign-key-constraint-for-role-table" author="bekir">
+        <!-- Foreign key to Role -->
+        <addForeignKeyConstraint baseTableName="user"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_role"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Foreign key to Role -->
+        <addForeignKeyConstraint baseTableName="author"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_author_role"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="23-10-2024-modify-data-type-date" author="bekir">
+        <modifyDataType tableName="blog" columnName="date" newDataType="timestamp"/>
     </changeSet>
 
 </databaseChangeLog>

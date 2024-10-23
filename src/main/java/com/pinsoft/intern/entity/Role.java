@@ -1,0 +1,30 @@
+package com.pinsoft.intern.entity;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    private int id;
+
+    @Column(name = "role_name")
+    private String roleName;
+
+    @OneToMany(mappedBy = "role")
+    @JsonManagedReference
+    private List<User> users;
+
+    @OneToMany(mappedBy = "role")
+    @JsonManagedReference
+    private List<Author> authors;
+}

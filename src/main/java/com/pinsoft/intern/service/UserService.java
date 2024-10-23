@@ -1,4 +1,5 @@
 package com.pinsoft.intern.service;
+import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.validation.EmailValidation;
 import com.pinsoft.intern.dto.UserDTO;
 import com.pinsoft.intern.entity.User;
@@ -23,6 +24,7 @@ public class UserService {
     private final PasswordValidation passwordValidation;
     private final UsernameValidation usernameValidation;
     private final EmailValidation emailValidation;
+    private final RoleService roleService;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -35,6 +37,7 @@ public class UserService {
 
     public User save(UserDTO userDTO) {
 
+        Role role = roleService.find(1);
         String email = userDTO.getEmail();
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
@@ -47,6 +50,7 @@ public class UserService {
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(password);
+        user.setRole(role);
 
         return userRepository.save(user);
     }

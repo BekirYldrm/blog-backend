@@ -23,8 +23,8 @@ public class BlogRepository implements EntityDao<Blog> {
     @Override
     @Transactional
     public Blog save(Blog entity) {
-         entityManager.persist(entity);
-         return entity;
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override
@@ -41,12 +41,24 @@ public class BlogRepository implements EntityDao<Blog> {
     @Override
     @Transactional
     public Blog update(Blog entity) {
-       return  entityManager.merge(entity);
+        return entityManager.merge(entity);
     }
 
     @Override
     @Transactional
     public void delete(Blog entity) {
         entityManager.remove(entity);
+    }
+
+    public List<Blog> findAllByOrderByPopularityDesc() {
+        return entityManager.createQuery("from Blog order by popularity desc ").getResultList();
+    }
+
+    public List<Blog> findAllByOrderByTitleAsc() {
+        return entityManager.createQuery("from Blog order by title asc ").getResultList();
+    }
+
+    public List<Blog> findAllByOrderByDateDesc() {
+        return entityManager.createQuery("from Blog order by date desc ").getResultList();
     }
 }

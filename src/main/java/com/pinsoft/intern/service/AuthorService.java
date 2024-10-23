@@ -2,6 +2,7 @@ package com.pinsoft.intern.service;
 
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.entity.Author;
+import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.repository.AuthorRepository;
 import com.pinsoft.intern.validation.EmailValidation;
 import com.pinsoft.intern.validation.NameValidation;
@@ -24,6 +25,7 @@ public class AuthorService {
     private final EmailValidation emailValidation;
     private final PasswordValidation passwordValidation;
     private final NameValidation nameValidation;
+    private final RoleService roleService;
 
     public List<Author> findAll() {
         return authorRepository.findAll();
@@ -35,6 +37,7 @@ public class AuthorService {
     }
 
     public Author save(AuthorDTO authorDTO) {
+        Role role = roleService.find(2);
         String email = authorDTO.getEmail();
         String password = authorDTO.getPassword();
         String firstName = authorDTO.getFirstName();
@@ -50,6 +53,7 @@ public class AuthorService {
         author.setFirstName(firstName);
         author.setLastName(lastName);
         author.setPassword(password);
+        author.setRole(role);
 
         return authorRepository.save(author);
     }

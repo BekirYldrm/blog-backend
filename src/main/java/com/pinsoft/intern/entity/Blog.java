@@ -1,12 +1,14 @@
 package com.pinsoft.intern.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class Blog {
 
     private String title;
     private String content;
-    private Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime date;
     private int popularity;
     private String image;
 
@@ -29,6 +32,11 @@ public class Blog {
     @JoinColumn(name = "author_id")
     @JsonBackReference
     private Author author;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    private Category category;
 
     @OneToMany(mappedBy = "blog")
     @JsonManagedReference
