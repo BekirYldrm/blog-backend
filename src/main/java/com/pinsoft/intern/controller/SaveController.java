@@ -41,14 +41,8 @@ public class SaveController {
     }
 
     @PostMapping
-    public ResponseEntity<Save> create(@RequestBody SaveDTO saveDTO) {
-        Save save = saveService.save(saveDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(save);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
-        saveService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> create(@RequestBody SaveDTO saveDTO) {
+        saveService.save(saveDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

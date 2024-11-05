@@ -5,6 +5,7 @@ import com.pinsoft.intern.response.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -29,6 +30,8 @@ public class GlobalExceptionHandler {
                     NameValidationException.class,
                     BlogValidationException.class,
                     CommentValidationException.class,
+                    InvalidCredentialsException.class,
+                    AccessDeniedException.class,
             }
     )
     public ResponseEntity<ErrorResponse> handleException(RuntimeException e) {
@@ -39,7 +42,14 @@ public class GlobalExceptionHandler {
             status = HttpStatus.NOT_FOUND;
         } else if (e instanceof EmailAlreadyInUseException || e instanceof UsernameAlreadyInUseException) {
             status = HttpStatus.CONFLICT;
-        } else {
+        }
+        else if (e instanceof InvalidCredentialsException) {
+            status = HttpStatus.UNAUTHORIZED;
+        }
+        else if (e instanceof AccessDeniedException) {
+            status = HttpStatus.FORBIDDEN;
+        }
+        else {
             status = HttpStatus.BAD_REQUEST;
         }
 

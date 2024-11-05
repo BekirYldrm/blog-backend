@@ -26,8 +26,8 @@ public class UserRepository implements EntityDao<User> {
     @Override
     @Transactional
     public User save(User entity) {
-         entityManager.persist(entity);
-         return entity;
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override
@@ -42,12 +42,11 @@ public class UserRepository implements EntityDao<User> {
     }
 
     public Optional<User> findByEmail(String email) {
-        try{
+        try {
             TypedQuery<User> query = entityManager.createQuery("from User where email = :email", User.class);
             User foundUser = query.setParameter("email", email).getSingleResult();
             return Optional.of(foundUser);
-        }
-        catch (NoResultException e){
+        } catch (NoResultException e) {
             return Optional.empty();
         }
 
@@ -56,7 +55,7 @@ public class UserRepository implements EntityDao<User> {
     @Override
     @Transactional
     public User update(User entity) {
-       return  entityManager.merge(entity);
+        return entityManager.merge(entity);
     }
 
     @Override
@@ -76,4 +75,11 @@ public class UserRepository implements EntityDao<User> {
     }
 
 
+    public User findByUsernameAndPassword(String username, String password) {
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+        return query.getResultStream().findFirst().orElse(null);
+    }
 }

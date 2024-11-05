@@ -63,4 +63,12 @@ public class AuthorRepository implements EntityDao<Author> {
     public void delete(Author entity) {
         entityManager.remove(entity);
     }
+
+    public Author findByEmailAndPassword(String email, String password) {
+        TypedQuery<Author> query = entityManager.createQuery(
+                "SELECT a FROM Author a WHERE a.email = :email AND a.password = :password", Author.class);
+        query.setParameter("email", email);
+        query.setParameter("password", password);
+        return query.getResultStream().findFirst().orElse(null);
+    }
 }

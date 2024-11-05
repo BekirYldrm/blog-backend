@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -42,5 +42,13 @@ public class Blog {
     @JsonManagedReference
     private List<Comment> comments;
 
-
+    public Blog(String title, String content, LocalDateTime date, int popularity,String image, Author author, Category category) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.category = category;
+        this.date = date;
+        this.popularity = popularity;
+        this.image = image;
+    }
 }

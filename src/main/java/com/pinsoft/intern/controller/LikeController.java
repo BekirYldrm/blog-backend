@@ -47,14 +47,8 @@ public class LikeController {
     }
 
     @PostMapping
-    public ResponseEntity<Like> create(@RequestBody LikedDTO likedDTO) {
-        Like savedLike = likeService.save(likedDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedLike);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
-        likeService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> create(@RequestBody LikedDTO likedDTO) {
+        likeService.save(likedDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

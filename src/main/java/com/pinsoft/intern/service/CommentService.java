@@ -4,12 +4,14 @@ import com.pinsoft.intern.dto.CommentDTO;
 import com.pinsoft.intern.entity.Blog;
 import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.entity.User;
+import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.CommentRepository;
 import com.pinsoft.intern.validation.CommentValidation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,9 +36,13 @@ public class CommentService {
         return comment;
     }
 
-    public List<Comment> findByUser(int id) {
-        List<Comment> comments = commentRepository.findByUser(id);
-        return comments;
+    public List<Comment> findByUser(int userId) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+
+        if (userDetails.isUserSelf(userId) || userDetails.isAdmin()) {
+            return commentRepository.findByUser(userId);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
     public List<Comment> findByBlog(int id) {
@@ -46,29 +52,38 @@ public class CommentService {
 
 
     public Comment save(CommentDTO commentDTO) {
-
         int userId = commentDTO.getUserId();
         int blogId = commentDTO.getBlogId();
         String commentStr = commentDTO.getComment();
         Double rating = commentDTO.getRating();
-
         User user = userService.find(userId);
         Blog blog = blogService.find(blogId);
 
-        commentValidation.validation(commentStr, rating);
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
 
-        Comment comment = new Comment();
-        comment.setUser(user);
-        comment.setBlog(blog);
-        comment.setComment(commentStr);
-        comment.setRating(rating);
-        return commentRepository.save(comment);
+
+        if (userDetails.isUserSelf(userId)) {
+            commentValidation.validation(commentStr, rating);
+            Comment comment = new Comment();
+            comment.setUser(user);
+            comment.setBlog(blog);
+            comment.setComment(commentStr);
+            comment.setRating(rating);
+            return commentRepository.save(comment);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
-    public void delete(int id) {
-        Comment comment = find(id);
-        commentRepository.delete(comment);
+    public void delete(int commentId) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+
+        Comment comment = find(commentId);
+
+        if (userDetails.isUserSelf(comment.getUser().getId()) || userDetails.isAdmin()) {
+            commentRepository.delete(comment);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+        }
     }
-
-
 }
+

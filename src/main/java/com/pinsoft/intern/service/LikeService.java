@@ -4,11 +4,13 @@ import com.pinsoft.intern.dto.LikedDTO;
 import com.pinsoft.intern.entity.Blog;
 import com.pinsoft.intern.entity.Like;
 import com.pinsoft.intern.entity.User;
+import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.LikeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class LikeService {
     private final UserService userService;
     private final BlogService blogService;
 
+
     public List<Like> findAll() {
         return likeRepository.findAll();
     }
@@ -34,39 +37,57 @@ public class LikeService {
     }
 
     public List<User> findUsers(int blogId) {
+
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         Blog blog = blogService.find(blogId);
-        return likeRepository.findUsers(blog);
+        int authorId = blog.getAuthor().getId();
+
+        if (userDetails.isAuthorSelf(authorId) || userDetails.isAdmin()) {
+            return likeRepository.findUsers(blog);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
     public List<Blog> findBlogs(int userId) {
+
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = userService.find(userId);
-        return likeRepository.findBlogs(user);
+
+        if (userDetails.isUserSelf(userId) || userDetails.isAdmin()) {
+            return likeRepository.findBlogs(user);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
-    public Like save(LikedDTO likedDTO) {
+    public void save(LikedDTO likedDTO) {
 
         int userId = likedDTO.getUserId();
         int blogId = likedDTO.getBlogId();
         User user = userService.find(userId);
         Blog blog = blogService.find(blogId);
-
         Optional<Like> likeOptional = likeRepository.findByUserAndBlog(userId, blogId);
 
-        if (likeOptional.isPresent()) {
-            delete(likeOptional.get().getId().intValue());
-            blogService.decreasePopularity(blog);
-            return null;
-        } else {
-            Like like = new Like();
-            like.setUser(user);
-            blogService.increasePopularity(blog);
-            like.setBlog(blog);
-            return likeRepository.save(like);
-        }
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
 
+        if (userDetails.getId() == userId) {
+
+            if (likeOptional.isPresent()) {
+                delete(likeOptional.get().getId().intValue());
+                blogService.decreasePopularity(blog);
+            } else {
+                Like like = new Like();
+                like.setUser(user);
+                blogService.increasePopularity(blog);
+                like.setBlog(blog);
+                likeRepository.save(like);
+            }
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+
+        }
     }
 
-    public void delete(int id) {
+    private void delete(int id) {
         Like like = find(id);
         likeRepository.delete(like);
     }

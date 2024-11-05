@@ -1,15 +1,18 @@
 package com.pinsoft.intern.service;
-import com.pinsoft.intern.entity.Role;
-import com.pinsoft.intern.validation.EmailValidation;
+
 import com.pinsoft.intern.dto.UserDTO;
+import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.entity.User;
+import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.UserRepository;
+import com.pinsoft.intern.validation.EmailValidation;
 import com.pinsoft.intern.validation.PasswordValidation;
 import com.pinsoft.intern.validation.UsernameValidation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,68 +39,64 @@ public class UserService {
     }
 
     public User save(UserDTO userDTO) {
-
         Role role = roleService.find(1);
         String email = userDTO.getEmail();
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
-
         usernameValidation.validation(username);
         emailValidation.validation(email);
         passwordValidation.validation(password);
-
         User user = new User();
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
-
         return userRepository.save(user);
     }
 
     public User updatePassword(String password, int id) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
-        String oldPassword = user.getPassword();
-
-        passwordValidation.validation(password,oldPassword);
-        user.setPassword(password);
-
-        return userRepository.update(user);
+        if (userDetails.isUserSelf(id)) {
+            String oldPassword = user.getPassword();
+            passwordValidation.validation(password, oldPassword);
+            user.setPassword(password);
+            return userRepository.update(user);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
     public User updateUsername(String username, int id) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
-        String oldUsername = user.getUsername();
-
-        usernameValidation.validation(username,oldUsername);
-        user.setUsername(username);
-
-        return userRepository.update(user);
+        if (userDetails.isUserSelf(id)) {
+            String oldUsername = user.getUsername();
+            usernameValidation.validation(username, oldUsername);
+            user.setUsername(username);
+            return userRepository.update(user);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
     public User updateEmail(String email, int id) {
-
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
-        String oldEmail = user.getEmail();
-
-        emailValidation.validation(email,oldEmail);
-        user.setEmail(email);
-
-        return userRepository.update(user);
+        if (userDetails.isUserSelf(id)) {
+            String oldEmail = user.getEmail();
+            emailValidation.validation(email, oldEmail);
+            user.setEmail(email);
+            return userRepository.update(user);
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
     public void delete(int id) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
-        userRepository.delete(user);
+        if (userDetails.isUserSelf(id) || userDetails.isAdmin()) {
+            userRepository.delete(user);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+        }
     }
-
-
-
-
-
-
-
-
-
-
 }
