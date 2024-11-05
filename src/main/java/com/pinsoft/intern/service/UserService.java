@@ -35,7 +35,12 @@ public class UserService {
 
     public User find(int id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return user;
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+        if (userDetails.isUserSelf(id) || userDetails.isAdmin()) {
+            return user;
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+
     }
 
     public User save(UserDTO userDTO) {
