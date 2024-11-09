@@ -1,7 +1,6 @@
 package com.pinsoft.intern.repository;
 
 import com.pinsoft.intern.entity.Author;
-import com.pinsoft.intern.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -18,16 +17,20 @@ import java.util.Optional;
 @Repository
 @Data
 @NoArgsConstructor
-@AllArgsConstructor(onConstructor_ = @Autowired)
 public class AuthorRepository implements EntityDao<Author> {
 
     private EntityManager entityManager;
 
+    @Autowired
+    public AuthorRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     @Override
     @Transactional
     public Author save(Author entity) {
-         entityManager.persist(entity);
-         return entity;
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override
@@ -42,12 +45,11 @@ public class AuthorRepository implements EntityDao<Author> {
     }
 
     public Optional<Author> findByEmail(String email) {
-        try{
+        try {
             TypedQuery<Author> query = entityManager.createQuery("from Author where email = :email", Author.class);
-            Author foundAuthor  = query.setParameter("email", email).getSingleResult();
+            Author foundAuthor = query.setParameter("email", email).getSingleResult();
             return Optional.of(foundAuthor);
-        }
-        catch (NoResultException e){
+        } catch (NoResultException e) {
             return Optional.empty();
         }
     }
@@ -55,7 +57,7 @@ public class AuthorRepository implements EntityDao<Author> {
     @Override
     @Transactional
     public Author update(Author entity) {
-       return  entityManager.merge(entity);
+        return entityManager.merge(entity);
     }
 
     @Override
