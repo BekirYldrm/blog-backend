@@ -20,10 +20,9 @@ public class UserController {
 
     private final UserService userService;
 
-
     @GetMapping
     public ResponseEntity<List<User>> getAll() {
-        List<User > users = userService.findAll();
+        List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
@@ -40,26 +39,32 @@ public class UserController {
     }
 
     @PatchMapping("/password/{id}")
-    public ResponseEntity<User > updatePassword(@PathVariable int id , @RequestParam String password) {
-        User updatedUser = userService.updatePassword(password,id);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<String> updatePassword(@PathVariable int id, @RequestParam String password) {
+        userService.updatePassword(password, id);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/username/{id}")
-    public ResponseEntity<User > updateUsername(@PathVariable int id , @RequestParam String username) {
-        User updatedUser = userService.updateUsername(username,id);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<String> updateUsername(@PathVariable int id, @RequestParam String username) {
+        userService.updateUsername(username, id);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/email/{id}")
-    public ResponseEntity<User > updateEmail(@PathVariable int id , @RequestParam String email) {
-        User updatedUser = userService.updateEmail(email,id);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<String> updateEmail(@PathVariable int id, @RequestParam String email) {
+        userService.updateEmail(email, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/image/{id}")
+    public ResponseEntity<String> updateImage(@PathVariable int id, @RequestParam String image) {
+        userService.updateImage(image, id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable int id) {
-       userService.delete(id);
-       return ResponseEntity.noContent().build();
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

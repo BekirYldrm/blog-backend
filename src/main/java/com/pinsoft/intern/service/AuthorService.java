@@ -57,7 +57,6 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-
     public void delete(int id) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         Author author = find(id);
@@ -68,27 +67,40 @@ public class AuthorService {
         }
     }
 
-    public Author updateEmail(String email, int authorId) {
+    public void updateEmail(String email, int authorId) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         Author author = find(authorId);
         if (userDetails.isAuthorSelf(authorId)) {
             String oldEmail = author.getEmail();
             emailValidation.validation(email, oldEmail);
             author.setEmail(email);
-            return authorRepository.update(author);
+            authorRepository.update(author);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
-        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
-    public Author updatePassword(String password, int authorId) {
+    public void updatePassword(String password, int authorId) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         Author author = find(authorId);
         if (userDetails.isAuthorSelf(authorId)) {
             String oldPassword = author.getPassword();
             passwordValidation.validation(password, oldPassword);
             author.setPassword(password);
-            return authorRepository.update(author);
+            authorRepository.update(author);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
-        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+    }
+
+    public void updateImage(String image, int authorId) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+        Author author = find(authorId);
+        if (userDetails.isAuthorSelf(authorId)) {
+            author.setImage(image);
+            authorRepository.update(author);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+        }
     }
 }

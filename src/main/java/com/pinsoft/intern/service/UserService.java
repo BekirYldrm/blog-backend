@@ -59,40 +59,54 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updatePassword(String password, int id) {
+    public void updatePassword(String password, int id) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
         if (userDetails.isUserSelf(id)) {
             String oldPassword = user.getPassword();
             passwordValidation.validation(password, oldPassword);
             user.setPassword(password);
-            return userRepository.update(user);
+            userRepository.update(user);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
-        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
-    public User updateUsername(String username, int id) {
+    public void updateUsername(String username, int id) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
         if (userDetails.isUserSelf(id)) {
             String oldUsername = user.getUsername();
             usernameValidation.validation(username, oldUsername);
             user.setUsername(username);
-            return userRepository.update(user);
+            userRepository.update(user);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
-        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
     }
 
-    public User updateEmail(String email, int id) {
+    public void updateEmail(String email, int id) {
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         User user = find(id);
         if (userDetails.isUserSelf(id)) {
             String oldEmail = user.getEmail();
             emailValidation.validation(email, oldEmail);
             user.setEmail(email);
-            return userRepository.update(user);
+            userRepository.update(user);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
-        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+    }
+
+    public void updateImage(String image, int id) {
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+        User user = find(id);
+        if (userDetails.isUserSelf(id)) {
+            user.setImage(image);
+            userRepository.update(user);
+        } else {
+            throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+        }
     }
 
     public void delete(int id) {
@@ -104,4 +118,6 @@ public class UserService {
             throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
     }
+
+
 }

@@ -39,14 +39,21 @@ public class AuthorController {
     }
 
     @PatchMapping("email/{id}")
-    public ResponseEntity<Author> updateEmail(@PathVariable int id,@RequestParam String email) {
-        Author updatedAuthor = authorService.updateEmail(email, id);
-        return ResponseEntity.ok(updatedAuthor);
+    public ResponseEntity<String> updateEmail(@PathVariable int id,@RequestParam String email) {
+        authorService.updateEmail(email, id);
+        return ResponseEntity.noContent().build();
     }
+
     @PatchMapping ("password/{id}")
-    public ResponseEntity<Author> updatePassword(@PathVariable int id,@RequestParam String password) {
-        Author author = authorService.updatePassword(password,id);
-        return ResponseEntity.ok(author);
+    public ResponseEntity<String> updatePassword(@PathVariable int id,@RequestParam String password) {
+        authorService.updatePassword(password,id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping ("image/{id}")
+    public ResponseEntity<String> updateImage(@PathVariable int id,@RequestParam String image) {
+        authorService.updateImage(image,id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
