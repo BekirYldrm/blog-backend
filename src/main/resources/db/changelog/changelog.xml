@@ -290,4 +290,17 @@
         <modifyDataType tableName="blog" columnName="date" newDataType="timestamp"/>
     </changeSet>
 
+    <changeSet id="13-11-2024-add-image-column-for-user-and-author" author="bekir">
+        <addColumn tableName="user">
+            <column name="image" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="author">
+            <column name="image" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
