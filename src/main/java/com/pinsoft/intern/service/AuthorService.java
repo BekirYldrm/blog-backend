@@ -2,6 +2,7 @@ package com.pinsoft.intern.service;
 
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.entity.Author;
+import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.AuthorRepository;
@@ -102,5 +103,10 @@ public class AuthorService {
         } else {
             throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
         }
+    }
+
+    public Author findByBlog(int id) {
+        Author author  = authorRepository.findByBlog(id);
+        return author;
     }
 }
