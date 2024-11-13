@@ -28,6 +28,8 @@ public class Author{
 
     private String password;
 
+    private String image;
+
     @OneToMany(mappedBy = "author")
     @JsonManagedReference
     private List<Blog> myBlogs;
