@@ -1,6 +1,7 @@
 package com.pinsoft.intern.service;
 
 import com.pinsoft.intern.dto.AuthorDTO;
+import com.pinsoft.intern.dto.AuthorResponseDTO;
 import com.pinsoft.intern.entity.Author;
 import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.entity.Role;
@@ -105,8 +106,9 @@ public class AuthorService {
         }
     }
 
-    public Author findByBlog(int id) {
-        Author author  = authorRepository.findByBlog(id);
-        return author;
+    public AuthorResponseDTO findByBlog(int id) {
+        Author author = authorRepository.findByBlog(id);
+        AuthorResponseDTO dto = new AuthorResponseDTO(author.getId(), author.getFirstName(), author.getLastName(), author.getImage());
+        return dto;
     }
 }
