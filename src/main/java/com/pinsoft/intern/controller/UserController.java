@@ -1,5 +1,6 @@
 package com.pinsoft.intern.controller;
 
+import com.pinsoft.intern.dto.UserCommentDTO;
 import com.pinsoft.intern.dto.UserDTO;
 import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.service.UserService;
@@ -34,9 +35,9 @@ public class UserController {
 
 
     @GetMapping("/comment/{id}")
-    public ResponseEntity<String> getUsernameByComment(@PathVariable int id) {
-       String username = userService.findUsernameByComment(id);
-        return ResponseEntity.ok(username);
+    public ResponseEntity<UserCommentDTO> getUserByComment(@PathVariable int id) {
+        UserCommentDTO dto = userService.findUserByComment(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping

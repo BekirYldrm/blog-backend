@@ -1,5 +1,6 @@
 package com.pinsoft.intern.service;
 
+import com.pinsoft.intern.dto.UserCommentDTO;
 import com.pinsoft.intern.dto.UserDTO;
 import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.entity.User;
@@ -120,8 +121,8 @@ public class UserService {
     }
 
 
-    public String findUsernameByComment(int commentId) {
-        String username = userRepository.findUsernameByComment(commentId);
-        return username;
+    public UserCommentDTO findUserByComment(int commentId) {
+        User user = userRepository.findUserByComment(commentId);
+        return new UserCommentDTO(user.getUsername(), user.getImage());
     }
 }
