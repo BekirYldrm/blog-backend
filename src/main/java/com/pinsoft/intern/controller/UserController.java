@@ -32,6 +32,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
+    @GetMapping("/comment/{id}")
+    public ResponseEntity<String> getUsernameByComment(@PathVariable int id) {
+       String username = userService.findUsernameByComment(id);
+        return ResponseEntity.ok(username);
+    }
+
     @PostMapping
     public ResponseEntity<User> create(@RequestBody UserDTO userDTO) {
         User savedUser = userService.save(userDTO);

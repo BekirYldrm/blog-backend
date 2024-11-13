@@ -1,7 +1,7 @@
 package com.pinsoft.intern.config;
 
-import com.pinsoft.intern.service.CustomUserDetailsService;
 import com.pinsoft.intern.jwt.JwtRequestFilter;
+import com.pinsoft.intern.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -73,10 +73,11 @@ public class SecurityConfig {
 
 
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET, "/users/comment/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/users/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("USER", "ADMIN")
 
 
                         .anyRequest().authenticated()

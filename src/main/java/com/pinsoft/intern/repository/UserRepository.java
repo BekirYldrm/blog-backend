@@ -82,4 +82,12 @@ public class UserRepository implements EntityDao<User> {
         query.setParameter("password", password);
         return query.getResultStream().findFirst().orElse(null);
     }
+
+    public String findUsernameByComment(int commentId) {
+        String jpql = "select a from User a join a.comments b where b.id = :commentId";
+        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
+        query.setParameter("commentId", commentId);
+        User user = query.getSingleResult();
+        return user.getUsername();
+    }
 }

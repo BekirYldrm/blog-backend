@@ -120,4 +120,8 @@ public class UserService {
     }
 
 
+    public String findUsernameByComment(int commentId) {
+        String username = userRepository.findUsernameByComment(commentId);
+        return username;
+    }
 }
