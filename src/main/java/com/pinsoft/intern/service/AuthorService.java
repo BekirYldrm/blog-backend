@@ -1,5 +1,6 @@
 package com.pinsoft.intern.service;
 
+import com.pinsoft.intern.dto.AuthorCustomDTO;
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.dto.AuthorResponseDTO;
 import com.pinsoft.intern.entity.Author;
@@ -44,6 +45,11 @@ public class AuthorService {
     public Author find(int id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         return author;
+    }
+
+    public AuthorCustomDTO findCustom(int id) {
+        Author author = find(id);
+        return new AuthorCustomDTO(author.getId(), author.getFirstName(), author.getLastName(), author.getImage(), author.getMyBlogs());
     }
 
     public Author save(AuthorDTO authorDTO) {

@@ -1,5 +1,6 @@
 package com.pinsoft.intern.controller;
 
+import com.pinsoft.intern.dto.AuthorCustomDTO;
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.dto.AuthorResponseDTO;
 import com.pinsoft.intern.entity.Author;
@@ -29,9 +30,9 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> get(@PathVariable int id) {
-        Author author =  authorService.find(id);
-        return ResponseEntity.ok(author);
+    public ResponseEntity<AuthorCustomDTO> get(@PathVariable int id) {
+        AuthorCustomDTO authorCustomDTO =  authorService.findCustom(id);
+        return ResponseEntity.ok(authorCustomDTO);
     }
 
     @GetMapping("/blog/{id}")
