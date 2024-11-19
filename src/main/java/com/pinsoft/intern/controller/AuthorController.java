@@ -23,9 +23,9 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAll() {
-        List<Author> authors = authorService.findAll();
-        return ResponseEntity.ok(authors);
+    public ResponseEntity<List<AuthorResponseDTO>> getAll() {
+        List<AuthorResponseDTO> dtoList = authorService.findAll();
+        return ResponseEntity.ok(dtoList);
     }
 
     @GetMapping("/{id}")

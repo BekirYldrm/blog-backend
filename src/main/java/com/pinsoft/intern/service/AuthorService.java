@@ -3,7 +3,6 @@ package com.pinsoft.intern.service;
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.dto.AuthorResponseDTO;
 import com.pinsoft.intern.entity.Author;
-import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.AuthorRepository;
@@ -18,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,8 +31,14 @@ public class AuthorService {
     private final NameValidation nameValidation;
     private final RoleService roleService;
 
-    public List<Author> findAll() {
-        return authorRepository.findAll();
+    public List<AuthorResponseDTO> findAll() {
+        List<Author> authors = authorRepository.findAll();
+
+        return authors.stream()
+                .map(author -> new AuthorResponseDTO(
+                        author.getId(), author.getFirstName(), author.getLastName(), author.getImage()))
+                .collect(Collectors.toList());
+
     }
 
     public Author find(int id) {
