@@ -33,6 +33,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<UserCommentDTO> getByUsername(@PathVariable String username) {
+        UserCommentDTO userCommentDTO = userService.findByUsername(username);
+        return ResponseEntity.ok(userCommentDTO);
+    }
 
     @GetMapping("/comment/{id}")
     public ResponseEntity<UserCommentDTO> getUserByComment(@PathVariable int id) {

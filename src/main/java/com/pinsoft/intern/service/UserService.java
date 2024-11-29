@@ -120,9 +120,19 @@ public class UserService {
         }
     }
 
-
     public UserCommentDTO findUserByComment(int commentId) {
         User user = userRepository.findUserByComment(commentId);
         return new UserCommentDTO(user.getUsername(), user.getImage());
+    }
+
+    public UserCommentDTO findByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+        if (userDetails.isUserSelf(user.getId()) || userDetails.isAdmin()) {
+
+            return new UserCommentDTO(user.getUsername(), user.getImage());
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+
     }
 }
