@@ -2,6 +2,7 @@ package com.pinsoft.intern.service;
 
 import com.pinsoft.intern.dto.UserCommentDTO;
 import com.pinsoft.intern.dto.UserDTO;
+import com.pinsoft.intern.dto.UserProfileDTO;
 import com.pinsoft.intern.entity.Role;
 import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.jwt.CustomUserDetails;
@@ -125,12 +126,12 @@ public class UserService {
         return new UserCommentDTO(user.getUsername(), user.getImage());
     }
 
-    public UserCommentDTO findByUsername(String username) {
+    public UserProfileDTO findByUsername(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found"));
         CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
         if (userDetails.isUserSelf(user.getId()) || userDetails.isAdmin()) {
 
-            return new UserCommentDTO(user.getUsername(), user.getImage());
+            return new UserProfileDTO(user.getId(), user.getUsername(), user.getImage());
         }
         throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
 

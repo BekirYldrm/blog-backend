@@ -2,6 +2,7 @@ package com.pinsoft.intern.controller;
 
 import com.pinsoft.intern.dto.UserCommentDTO;
 import com.pinsoft.intern.dto.UserDTO;
+import com.pinsoft.intern.dto.UserProfileDTO;
 import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.service.UserService;
 import lombok.AllArgsConstructor;
@@ -34,9 +35,9 @@ public class UserController {
     }
 
     @GetMapping("/profile/{username}")
-    public ResponseEntity<UserCommentDTO> getByUsername(@PathVariable String username) {
-        UserCommentDTO userCommentDTO = userService.findByUsername(username);
-        return ResponseEntity.ok(userCommentDTO);
+    public ResponseEntity<UserProfileDTO> getByUsername(@PathVariable String username) {
+        UserProfileDTO dto = userService.findByUsername(username);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/comment/{id}")
