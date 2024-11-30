@@ -3,9 +3,7 @@ package com.pinsoft.intern.controller;
 import com.pinsoft.intern.dto.AuthorCustomDTO;
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.dto.AuthorResponseDTO;
-import com.pinsoft.intern.dto.UserProfileDTO;
 import com.pinsoft.intern.entity.Author;
-import com.pinsoft.intern.entity.Comment;
 import com.pinsoft.intern.service.AuthorService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,12 +34,17 @@ public class AuthorController {
         return ResponseEntity.ok(authorCustomDTO);
     }
 
+    @GetMapping("/my-info/{id}")
+    public ResponseEntity<Author> getAuthor(@PathVariable int id) {
+        Author author = authorService.findMyInfo(id);
+        return ResponseEntity.ok(author);
+    }
+
     @GetMapping("/profile/{email}")
     public ResponseEntity<AuthorResponseDTO> getByEmail(@PathVariable String email) {
         AuthorResponseDTO dto = authorService.findByEmail(email);
         return ResponseEntity.ok(dto);
     }
-
 
     @GetMapping("/blog/{id}")
     public ResponseEntity<AuthorResponseDTO> getAuthorByBlog(@PathVariable int id) {

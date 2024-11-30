@@ -3,10 +3,8 @@ package com.pinsoft.intern.service;
 import com.pinsoft.intern.dto.AuthorCustomDTO;
 import com.pinsoft.intern.dto.AuthorDTO;
 import com.pinsoft.intern.dto.AuthorResponseDTO;
-import com.pinsoft.intern.dto.UserProfileDTO;
 import com.pinsoft.intern.entity.Author;
 import com.pinsoft.intern.entity.Role;
-import com.pinsoft.intern.entity.User;
 import com.pinsoft.intern.jwt.CustomUserDetails;
 import com.pinsoft.intern.repository.AuthorRepository;
 import com.pinsoft.intern.validation.EmailValidation;
@@ -47,6 +45,16 @@ public class AuthorService {
     public Author find(int id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         return author;
+    }
+
+    public Author findMyInfo(int id) {
+        Author author = find(id);
+        CustomUserDetails userDetails = CustomUserDetailsService.getAuthenticatedUser();
+        if (userDetails.isAuthorSelf(id) || userDetails.isAdmin()) {
+            return author;
+        }
+        throw new AccessDeniedException("Bu işlem için yetkiniz yok.");
+
     }
 
     public AuthorCustomDTO findCustom(int id) {
