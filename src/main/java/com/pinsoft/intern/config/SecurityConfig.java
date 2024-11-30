@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/login/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/authors").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/authors/my-info/**").hasAnyRole("AUTHOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/authors/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/authors").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/authors/**").hasRole("AUTHOR")
